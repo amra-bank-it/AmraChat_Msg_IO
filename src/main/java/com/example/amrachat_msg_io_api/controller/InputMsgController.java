@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController()
+@RestController
+@RequestMapping("/inputMsg")
 public class InputMsgController {
     @Autowired
     private TicketsDao ticketDao;
@@ -24,7 +26,7 @@ public class InputMsgController {
             Ticket ticket = new Ticket();
 
             if (message.getTicketId() == 0) {
-                ticket.setStatus("OnWaiting");
+                ticket.setStatus(3);
                 ticket.setClientID(message.getClientId());
                 ticketDao.save(ticket);
                 message.setTicketId(ticket.getId());

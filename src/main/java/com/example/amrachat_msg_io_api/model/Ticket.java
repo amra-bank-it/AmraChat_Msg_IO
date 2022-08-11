@@ -10,7 +10,7 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
-    private String status;
+    private long statusId;
 
     private long clientId;
 
@@ -28,12 +28,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
+    public long getStatus() {
+        return statusId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(long statusId) {
+        this.statusId = statusId;
     }
 
     public long getClientId() {
@@ -68,7 +68,7 @@ public class Ticket {
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", status='" + status + '\'' +
+                ", status='" + statusId + '\'' +
                 ", clientID=" + clientId +
                 ", userId=" + userId +
                 '}';
