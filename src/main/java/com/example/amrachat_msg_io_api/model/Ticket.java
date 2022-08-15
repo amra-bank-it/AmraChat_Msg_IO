@@ -1,6 +1,5 @@
 package com.example.amrachat_msg_io_api.model;
 
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -9,7 +8,7 @@ import javax.persistence.*;
 public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id;
+    private long Id;
     private long statusId;
 
     private long clientId;
@@ -21,11 +20,11 @@ public class Ticket {
     public Ticket(){}
 
     public long getId() {
-        return id;
+        return Id;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.Id = id;
     }
 
     public long getStatus() {
@@ -67,10 +66,11 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + id +
-                ", status='" + statusId + '\'' +
-                ", clientID=" + clientId +
+                "id=" + Id +
+                ", statusId=" + statusId +
+                ", clientId=" + clientId +
                 ", userId=" + userId +
+                ", theme='" + theme + '\'' +
                 '}';
     }
 }

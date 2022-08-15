@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface TicketsDao extends JpaRepository<Ticket,Long> {
     Ticket findById(long Id);
+    Ticket findByStatusId(long Id);
 
 }

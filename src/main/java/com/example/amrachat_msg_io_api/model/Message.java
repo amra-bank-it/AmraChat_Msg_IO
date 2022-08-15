@@ -63,6 +63,8 @@ public class Message {
                 "Id=" + Id +
                 ", ticketId=" + ticketId +
                 ", datetime=" + datetime +
+                ", clientId=" + clientId +
+                ", msgBody='" + msgBody + '\'' +
                 '}';
     }
 }
