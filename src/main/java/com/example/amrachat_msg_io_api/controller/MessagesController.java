@@ -2,6 +2,7 @@ package com.example.amrachat_msg_io_api.controller;
 
 import com.example.amrachat_msg_io_api.dao.MessagesDao;
 import com.example.amrachat_msg_io_api.dao.TicketsDao;
+import com.example.amrachat_msg_io_api.dao.UsersDao;
 import com.example.amrachat_msg_io_api.model.Message;
 import com.example.amrachat_msg_io_api.model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class MessagesController {
     private TicketsDao ticketDao;
     @Autowired
     private MessagesDao messageDao;
+    @Autowired
+    private UsersDao usersDao;
 
     @PostMapping("/send")
     public ResponseEntity<?> sendMsg(@RequestBody Message message) {
@@ -28,6 +31,9 @@ public class MessagesController {
             if (message.getTicketId() == 0) {
                 ticket.setStatus(3);
                 ticket.setClientID(message.getClientId());
+                ticket.setUserId(
+                        usersDao.findByFirstname("support").getId()
+                );
                 ticketDao.save(ticket);
                 message.setTicketId(ticket.getId());
             }

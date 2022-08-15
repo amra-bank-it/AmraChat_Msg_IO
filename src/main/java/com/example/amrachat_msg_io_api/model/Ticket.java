@@ -23,8 +23,8 @@ public class Ticket {
         return Id;
     }
 
-    public void setId(long id) {
-        this.Id = id;
+    public void setId(long Id) {
+        this.Id = Id;
     }
 
     public long getStatus() {
@@ -67,7 +67,7 @@ public class Ticket {
     public String toString() {
         return "Ticket{" +
                 "id=" + Id +
-                ", statusId=" + statusId +
+                ", status=" + statusId +
                 ", clientId=" + clientId +
                 ", userId=" + userId +
                 ", theme='" + theme + '\'' +
