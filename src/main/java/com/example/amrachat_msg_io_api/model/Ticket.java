@@ -1,9 +1,9 @@
 package com.example.amrachat_msg_io_api.model;
 
+import com.example.amrachat_msg_io_api.dao.TicketStatusDao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -16,40 +16,44 @@ public class Ticket {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "status_id",referencedColumnName = "id")
-    private TicketStatus ticketStatus;
+    private long ticketStatusId;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
-    private Client client;
+    private long clientId;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
-    private User user;
+    @Nullable
+    private long userId;
 
     private String theme;
 
-    public Ticket(){}
 
+    public Ticket(){}
 
     public long getId() {
         return id;
     }
 
-    public void setTicketStatus(TicketStatus ticketStatus) {
-        this.ticketStatus = ticketStatus;
-    }
-    public TicketStatus getTicketStatus() {
-        return ticketStatus;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public Client getClient() {
-        return client;
+    public void setTicketStatusId(long ticketStatusId) {
+        this.ticketStatusId = ticketStatusId;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getTheme() {
@@ -60,26 +64,13 @@ public class Ticket {
         this.theme = theme;
     }
 
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", ticketStatus=" + ticketStatus +
-                ", client=" + client +
-                ", user=" + user +
+                ", ticketStatusId=" + ticketStatusId +
+                ", clientId=" + clientId +
+                ", userId=" + userId +
                 ", theme='" + theme + '\'' +
                 '}';
     }

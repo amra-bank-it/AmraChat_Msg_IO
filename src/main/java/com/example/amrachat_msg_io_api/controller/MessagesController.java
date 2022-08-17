@@ -1,11 +1,8 @@
 package com.example.amrachat_msg_io_api.controller;
 
 import com.example.amrachat_msg_io_api.dao.*;
-import com.example.amrachat_msg_io_api.model.Client;
 import com.example.amrachat_msg_io_api.model.Message;
 import com.example.amrachat_msg_io_api.model.Ticket;
-import com.example.amrachat_msg_io_api.model.User;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,47 +13,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/msg")
 public class MessagesController {
+
+    private final TicketsDao ticketsDao;
+    private final MessagesDao messagesDao;
+
     @Autowired
-    private TicketsDao ticketDao;
-    @Autowired
-    private MessagesDao messageDao;
-    @Autowired
-    private UsersDao usersDao;
-    @Autowired
-    private TicketStatusDao tickerStatusDao;
-    @Autowired
-    private ClientsDao clientsDao;
+    public MessagesController(TicketsDao ticketsDao, MessagesDao messagesDao) {
+        this.ticketsDao = ticketsDao;
+        this.messagesDao = messagesDao;
+    }
 
     @PostMapping("/send")
     public ResponseEntity<?> sendMsg(@RequestBody Message message) {
         String resMsg;
         try {
-                long clientId = message.getClient().getId();
-                long ticketId = message.getTicket().getId();
+                long ticketId = message.getTicketId();
 
-                if(!clientsDao.existsById(clientId)) {
-                    throw new Exception("Client with id: "+ clientId + " does not exist");
-                }
 
-                if(!ticketDao.existsById(ticketId)) {
+                if(!ticketsDao.existsById(ticketId) && message.getTicketId() !=0L) {
                     throw new Exception("Ticket with id: "+ ticketId + " does not exist");
                 }
 
-                Client client = clientsDao.findById(clientId);
 
-
-            if (message.getTicket().getId() == 0) {
+            if (!ticketsDao.existsById(message.getTicketId())) {
                 Ticket ticket = new Ticket();
-                ticket.setTicketStatus(tickerStatusDao.findById(3));
-                ticket.setClient(client);
-                ticket.setUser(usersDao.findByFirstname("support"));
-                ticketDao.save(ticket);
-                message.setTicket(ticket);
-            }else {
-                message.setTicket(ticketDao.findById(message.getTicket().getId()));
+                ticket.setTicketStatusId(3);
+                ticket.setUserId(1);
+                ticket.setClientId(message.getClientId());
+                ticket.setTheme(message.getTheme());
+                ticketsDao.save(ticket);
+                ticketId = ticket.getId();
+                message.setTicketId(ticket.getId());
             }
-                message.setClient(client);
-                messageDao.save(message);
+
+                messagesDao.save(message);
                 resMsg = "{ Message{id: "+message.getId()+"} "+"in Ticket{id: "+ticketId+"}"+" successfully sent }";
 
             return new ResponseEntity<>(
@@ -75,7 +65,7 @@ public class MessagesController {
     @PostMapping("/getAllByTicket")
     public ResponseEntity<?> sendMsg(@RequestBody Ticket ticket){
         try{
-            List<Message> messages = messageDao.findAllByTicketId(ticket.getId());
+            List<Message> messages = messagesDao.findAllByTicketId(ticket.getId());
             return new ResponseEntity<>(
                     messages,
                     HttpStatus.OK);
@@ -91,7 +81,7 @@ public class MessagesController {
     public ResponseEntity<?> getByTicketId(@RequestBody Message message) {
         try {
             return new ResponseEntity<>(
-                    messageDao.findById(message.getId()),
+                    messagesDao.findById(message.getId()),
                     HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
@@ -100,12 +90,12 @@ public class MessagesController {
         }
     }
 
-    @DeleteMapping("/deleteById")
+    @PostMapping("/deleteById")
     public ResponseEntity<?> deleteTicket(@RequestBody Message message) {
         String resMsg;
         try {
-            if(messageDao.existsById(message.getId())) {
-                messageDao.delete(message);
+            if(messagesDao.existsById(message.getId())) {
+                messagesDao.delete(message);
                 resMsg = "{Message with id: " + message.getId() + " deleted}";
             }else {
                 resMsg = "{Message with id: " + message.getId() + " not exists}";

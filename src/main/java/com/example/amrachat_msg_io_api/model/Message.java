@@ -1,7 +1,9 @@
 package com.example.amrachat_msg_io_api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.*;
@@ -17,19 +19,22 @@ public class Message {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "ticket_id",referencedColumnName = "id")
-    private Ticket ticket;
+    @Column(name = "ticket_id")
+    private long ticketId;
+
+    @Column(name = "client_id")
+    @JsonProperty(value = "clientId")
+    private long clientId;
 
     @Column(name = "datetime")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime datetime;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
-    private Client client;
-
     private  String msgBody;
+
+    @Transient
+    @JsonProperty(value = "theme")
+    private String theme;
 
     public Message(){}
 
@@ -41,20 +46,21 @@ public class Message {
         this.id = id;
     }
 
-    public Ticket getTicket() {
-        return ticket;
+    @JsonIgnore
+    public String getTheme() {
+        return theme;
     }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 
-    public Client getClient() {
-        return client;
+    public long getTicketId() {
+        return ticketId;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setTicketId(long ticketId) {
+        this.ticketId = ticketId;
     }
 
     public LocalDateTime getDatetime() {
@@ -69,17 +75,25 @@ public class Message {
         return msgBody;
     }
 
+
     public void setMsgBody(String msgBody) {
         this.msgBody = msgBody;
+    }
+    @JsonIgnore
+    public long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "Id=" + id +
-                ", ticketId=" + ticket +
+                ", ticketId=" + ticketId +
                 ", datetime=" + datetime +
-                ", client=" + client +
                 ", msgBody='" + msgBody + '\'' +
                 '}';
     }

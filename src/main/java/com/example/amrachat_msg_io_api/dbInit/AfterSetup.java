@@ -59,9 +59,9 @@ public class AfterSetup {
         if (!ticketsDao.existsById(1L)){
             Ticket ticket = new Ticket(
                     1L,
-                    ticketStatusDao.findById(4L),
-                    clientsDao.findById(1L),
-                    usersDao.findById(1L),
+                    4L,
+                    1L,
+                    1L,
                     "testTicket"
             );
             ticketsDao.saveAndFlush(ticket);
@@ -71,11 +71,11 @@ public class AfterSetup {
             Date date = new Date();
             Message message = new Message(
                     1L,
-                    ticketsDao.findById(1L),
-                    LocalDateTime.parse("2020-01-01 21:00:01",formatter),
-                    //DateTime.currentDT("yyyy-MM-dd HH:mm:ss"),
-                    clientsDao.findById(1L),
-                    "test message"
+                    1L,
+                     1L,
+                     LocalDateTime.parse("2020-01-01 21:00:01",formatter),
+                    "test message",
+                    "Test theme"
             );
             messagesDao.save(message);
         }

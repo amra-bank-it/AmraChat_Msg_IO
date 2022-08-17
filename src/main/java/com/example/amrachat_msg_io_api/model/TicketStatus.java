@@ -2,15 +2,17 @@ package com.example.amrachat_msg_io_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ticket_Status")
+@Table(name = "ticket_status")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TicketStatus {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @JsonProperty(value = "id")
     private long id;
     @Column(name = "title")
     private String title;
@@ -18,6 +20,7 @@ public class TicketStatus {
     public TicketStatus() {
     }
 
+    @JsonIgnore
     public long getId() {
         return id;
     }

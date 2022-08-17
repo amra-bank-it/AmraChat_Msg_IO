@@ -3,6 +3,7 @@ com/example/amrachat_msg_io_api/dbInit/AfterSetup.class
 com/example/amrachat_msg_io_api/dao/UsersDao.class
 com/example/amrachat_msg_io_api/dao/ClientsDao.class
 com/example/amrachat_msg_io_api/model/User.class
+com/example/amrachat_msg_io_api/controller/StatusController.class
 com/example/amrachat_msg_io_api/model/Ticket.class
 com/example/amrachat_msg_io_api/model/Message.class
 com/example/amrachat_msg_io_api/controller/TicketsController.class

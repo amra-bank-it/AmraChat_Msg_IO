@@ -17,20 +17,15 @@ import java.util.List;
 public class TicketsController {
 
     private final TicketsDao ticketsDao;
-    private final ClientsDao clientsDao;
-    private final UsersDao usersDao;
-    private final TicketStatusDao ticketStatusDao;
+
 
     @Autowired
-    public TicketsController(TicketsDao ticketsDao, ClientsDao clientsDao, UsersDao usersDao, TicketStatusDao ticketStatusDao) {
+    public TicketsController(TicketsDao ticketsDao) {
         this.ticketsDao = ticketsDao;
-        this.clientsDao = clientsDao;
-        this.usersDao = usersDao;
-        this.ticketStatusDao = ticketStatusDao;
     }
 
 
-    @GetMapping("/getAll")
+    @PostMapping("/allTickets")
     public ResponseEntity<?> getTickets() {
         try {
             List<Ticket> tickets = ticketsDao.findAll();
@@ -44,7 +39,7 @@ public class TicketsController {
         }
     }
 
-    @PostMapping("/getById")
+    @PostMapping("/ById")
     public ResponseEntity<?> getByTicketId(@RequestBody Ticket ticket) {
         try {
             return new ResponseEntity<>(
@@ -57,7 +52,7 @@ public class TicketsController {
         }
     }
 
-    @DeleteMapping("/deleteById")
+    @PostMapping("/deleteById")
     public ResponseEntity<?> deleteTicket(@RequestBody Ticket ticket) {
         String resMsg;
         try {
@@ -77,33 +72,5 @@ public class TicketsController {
         }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> saveTicket(@RequestBody Ticket ticket){
-        String exsMsg;
-        try {
-            Ticket lTicket = ticketsDao.existsById(ticket.getId())? ticket : new Ticket();
-
-                lTicket.setUser(
-                        usersDao.findById(ticket.getUser().getId())
-                );
-                lTicket.setClient(
-                        clientsDao.findById(ticket.getClient().getId())
-                );
-                lTicket.setTicketStatus(
-                        ticketStatusDao.findById(ticket.getTicketStatus().getId())
-                );
-                lTicket.setTheme(ticket.getTheme());
-
-                ticketsDao.save(lTicket);
-
-            return new ResponseEntity<>(
-                    lTicket,
-                    HttpStatus.OK);
-        } catch (Exception e) {
-            exsMsg = "{ Ticket save exception " + e.getMessage() + " }";
-            return new ResponseEntity<>(
-                    exsMsg,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
-}
+
