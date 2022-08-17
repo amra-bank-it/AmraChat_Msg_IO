@@ -40,6 +40,10 @@ public class Ticket {
         this.ticketStatusId = ticketStatusId;
     }
 
+    public long getTicketStatusId() {
+        return ticketStatusId;
+    }
+
     public long getClientId() {
         return clientId;
     }
