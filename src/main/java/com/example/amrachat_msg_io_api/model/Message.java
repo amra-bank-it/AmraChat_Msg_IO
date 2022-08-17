@@ -1,48 +1,64 @@
 package com.example.amrachat_msg_io_api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "Messages")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@AllArgsConstructor
 public class Message {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long Id;
-    private long ticketId;
+    private long id;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "ticket_id",referencedColumnName = "id")
+    private Ticket ticket;
+
+    @Column(name = "datetime")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime datetime;
-    private long clientId;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
+
     private  String msgBody;
 
     public Message(){}
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        Id = id;
+        this.id = id;
     }
 
-    public long getTicketId() {
-        return ticketId;
+    public Ticket getTicket() {
+        return ticket;
     }
 
-    public void setTicketId(long ticketId) {
-        this.ticketId = ticketId;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public LocalDateTime getDatetime() {
         return datetime;
-    }
-
-    public long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
     }
 
     public void setDatetime(LocalDateTime datetime) {
@@ -60,10 +76,10 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "Id=" + Id +
-                ", ticketId=" + ticketId +
+                "Id=" + id +
+                ", ticketId=" + ticket +
                 ", datetime=" + datetime +
-                ", clientId=" + clientId +
+                ", client=" + client +
                 ", msgBody='" + msgBody + '\'' +
                 '}';
     }

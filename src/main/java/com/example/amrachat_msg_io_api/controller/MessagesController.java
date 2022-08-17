@@ -1,10 +1,11 @@
 package com.example.amrachat_msg_io_api.controller;
 
-import com.example.amrachat_msg_io_api.dao.MessagesDao;
-import com.example.amrachat_msg_io_api.dao.TicketsDao;
-import com.example.amrachat_msg_io_api.dao.UsersDao;
+import com.example.amrachat_msg_io_api.dao.*;
+import com.example.amrachat_msg_io_api.model.Client;
 import com.example.amrachat_msg_io_api.model.Message;
 import com.example.amrachat_msg_io_api.model.Ticket;
+import com.example.amrachat_msg_io_api.model.User;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,31 +22,49 @@ public class MessagesController {
     private MessagesDao messageDao;
     @Autowired
     private UsersDao usersDao;
+    @Autowired
+    private TicketStatusDao tickerStatusDao;
+    @Autowired
+    private ClientsDao clientsDao;
 
     @PostMapping("/send")
     public ResponseEntity<?> sendMsg(@RequestBody Message message) {
         String resMsg;
         try {
-            Ticket ticket = new Ticket();
+                long clientId = message.getClient().getId();
+                long ticketId = message.getTicket().getId();
 
-            if (message.getTicketId() == 0) {
-                ticket.setStatus(3);
-                ticket.setClientID(message.getClientId());
-                ticket.setUserId(
-                        usersDao.findByFirstname("support").getId()
-                );
+                if(!clientsDao.existsById(clientId)) {
+                    throw new Exception("Client with id: "+ clientId + " does not exist");
+                }
+
+                if(!ticketDao.existsById(ticketId)) {
+                    throw new Exception("Ticket with id: "+ ticketId + " does not exist");
+                }
+
+                Client client = clientsDao.findById(clientId);
+
+
+            if (message.getTicket().getId() == 0) {
+                Ticket ticket = new Ticket();
+                ticket.setTicketStatus(tickerStatusDao.findById(3));
+                ticket.setClient(client);
+                ticket.setUser(usersDao.findByFirstname("support"));
                 ticketDao.save(ticket);
-                message.setTicketId(ticket.getId());
+                message.setTicket(ticket);
+            }else {
+                message.setTicket(ticketDao.findById(message.getTicket().getId()));
             }
-            messageDao.save(message);
-            resMsg = "{ " + message + " successfully sent}";
+                message.setClient(client);
+                messageDao.save(message);
+                resMsg = "{ Message{id: "+message.getId()+"} "+"in Ticket{id: "+ticketId+"}"+" successfully sent }";
 
             return new ResponseEntity<>(
                     resMsg,
                     HttpStatus.OK);
 
         } catch (Exception e) {
-            resMsg = "{ Send message error }";
+            resMsg = "{ Send message error }" + e.getMessage();
             return new ResponseEntity<>(
                     resMsg,
                     HttpStatus.INTERNAL_SERVER_ERROR

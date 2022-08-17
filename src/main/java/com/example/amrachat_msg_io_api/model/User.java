@@ -1,13 +1,18 @@
 package com.example.amrachat_msg_io_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Chat_Users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long Id;
+    private long id;
     private String firstname;
     private String lastname;
     private String surname;
@@ -18,12 +23,13 @@ public class User {
 
     }
 
+
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public String getFirstname() {
@@ -69,7 +75,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + Id +
+                "id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", surname='" + surname + '\'' +

@@ -1,4 +1,6 @@
 com/example/amrachat_msg_io_api/dao/TicketsDao.class
+com/example/amrachat_msg_io_api/dbInit/AfterSetup.class
+com/example/amrachat_msg_io_api/dao/UsersDao.class
 com/example/amrachat_msg_io_api/dao/ClientsDao.class
 com/example/amrachat_msg_io_api/model/User.class
 com/example/amrachat_msg_io_api/model/Ticket.class
@@ -6,6 +8,8 @@ com/example/amrachat_msg_io_api/model/Message.class
 com/example/amrachat_msg_io_api/controller/TicketsController.class
 com/example/amrachat_msg_io_api/model/Client.class
 com/example/amrachat_msg_io_api/model/File.class
+com/example/amrachat_msg_io_api/dao/TicketStatusDao.class
 com/example/amrachat_msg_io_api/AmraChatMsgIoApiApplication.class
 com/example/amrachat_msg_io_api/dao/MessagesDao.class
+com/example/amrachat_msg_io_api/model/TicketStatus.class
 com/example/amrachat_msg_io_api/controller/MessagesController.class

@@ -1,46 +1,55 @@
 package com.example.amrachat_msg_io_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Tickets")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@AllArgsConstructor
 public class Ticket {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long Id;
-    private long statusId;
+    private long id;
 
-    private long clientId;
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id",referencedColumnName = "id")
+    private TicketStatus ticketStatus;
 
-    private long userId;
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
+
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private User user;
 
     private String theme;
 
     public Ticket(){}
 
+
     public long getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(long Id) {
-        this.Id = Id;
+    public void setTicketStatus(TicketStatus ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+    public TicketStatus getTicketStatus() {
+        return ticketStatus;
     }
 
-    public long getStatus() {
-        return statusId;
+    public Client getClient() {
+        return client;
     }
 
-    public void setStatus(long statusId) {
-        this.statusId = statusId;
-    }
-
-    public long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public String getTheme() {
@@ -51,25 +60,26 @@ public class Ticket {
         this.theme = theme;
     }
 
-    public void setClientID(long clientId) {
-        this.clientId = clientId;
+
+    public User getUser() {
+        return user;
     }
 
-    public long getUserId() {
-        return userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + Id +
-                ", status=" + statusId +
-                ", clientId=" + clientId +
-                ", userId=" + userId +
+                "id=" + id +
+                ", ticketStatus=" + ticketStatus +
+                ", client=" + client +
+                ", user=" + user +
                 ", theme='" + theme + '\'' +
                 '}';
     }

@@ -1,6 +1,9 @@
 package com.example.amrachat_msg_io_api.controller;
 
+import com.example.amrachat_msg_io_api.dao.ClientsDao;
+import com.example.amrachat_msg_io_api.dao.TicketStatusDao;
 import com.example.amrachat_msg_io_api.dao.TicketsDao;
+import com.example.amrachat_msg_io_api.dao.UsersDao;
 import com.example.amrachat_msg_io_api.model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +16,19 @@ import java.util.List;
 @RequestMapping("/tickets")
 public class TicketsController {
 
+    private final TicketsDao ticketsDao;
+    private final ClientsDao clientsDao;
+    private final UsersDao usersDao;
+    private final TicketStatusDao ticketStatusDao;
+
     @Autowired
-    TicketsDao ticketsDao;
+    public TicketsController(TicketsDao ticketsDao, ClientsDao clientsDao, UsersDao usersDao, TicketStatusDao ticketStatusDao) {
+        this.ticketsDao = ticketsDao;
+        this.clientsDao = clientsDao;
+        this.usersDao = usersDao;
+        this.ticketStatusDao = ticketStatusDao;
+    }
+
 
     @GetMapping("/getAll")
     public ResponseEntity<?> getTickets() {
@@ -65,13 +79,30 @@ public class TicketsController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveTicket(@RequestBody Ticket ticket){
+        String exsMsg;
         try {
+            Ticket lTicket = ticketsDao.existsById(ticket.getId())? ticket : new Ticket();
+
+                lTicket.setUser(
+                        usersDao.findById(ticket.getUser().getId())
+                );
+                lTicket.setClient(
+                        clientsDao.findById(ticket.getClient().getId())
+                );
+                lTicket.setTicketStatus(
+                        ticketStatusDao.findById(ticket.getTicketStatus().getId())
+                );
+                lTicket.setTheme(ticket.getTheme());
+
+                ticketsDao.save(lTicket);
+
             return new ResponseEntity<>(
-                    ticketsDao.save(ticket),
+                    lTicket,
                     HttpStatus.OK);
         } catch (Exception e) {
+            exsMsg = "{ Ticket save exception " + e.getMessage() + " }";
             return new ResponseEntity<>(
-                    e.getMessage(),
+                    exsMsg,
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
