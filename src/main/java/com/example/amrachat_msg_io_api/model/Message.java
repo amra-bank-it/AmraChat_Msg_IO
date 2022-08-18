@@ -32,6 +32,8 @@ public class Message {
 
     private  String msgBody;
 
+    boolean isClientMsg;
+
     @Transient
     @JsonProperty(value = "theme")
     private String theme;
@@ -53,6 +55,14 @@ public class Message {
 
     public void setTheme(String theme) {
         this.theme = theme;
+    }
+
+    public boolean isClientMsg() {
+        return isClientMsg;
+    }
+
+    public void setClientMsg(boolean clientMsg) {
+        isClientMsg = clientMsg;
     }
 
     public long getTicketId() {
