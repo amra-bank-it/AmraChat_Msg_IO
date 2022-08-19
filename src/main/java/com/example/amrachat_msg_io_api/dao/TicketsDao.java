@@ -18,6 +18,11 @@ public interface TicketsDao extends JpaRepository<Ticket,Long> {
     @Query(value = "INSERT INTO AmraChat.tickets (id, theme, client_id, user_id, ticket_status_id)\n" +
             "        VALUES (1, 'TestTicket', 1, 1, 1);",nativeQuery = true)
     void addFirstTicket();
+
+    @Transactional
+    @Modifying
+    @Query(value = "select * from tickets where ticket_status_id <> 3 and user_id in (1,:userId);",nativeQuery = true)
+    List<Ticket> actual(long userId);
 }
 
 

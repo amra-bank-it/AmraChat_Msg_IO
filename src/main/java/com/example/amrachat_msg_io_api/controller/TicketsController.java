@@ -1,10 +1,8 @@
 package com.example.amrachat_msg_io_api.controller;
 
-import com.example.amrachat_msg_io_api.dao.ClientsDao;
-import com.example.amrachat_msg_io_api.dao.TicketStatusDao;
 import com.example.amrachat_msg_io_api.dao.TicketsDao;
-import com.example.amrachat_msg_io_api.dao.UsersDao;
 import com.example.amrachat_msg_io_api.model.Ticket;
+import com.example.amrachat_msg_io_api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +63,43 @@ public class TicketsController {
                 return new ResponseEntity<>(
                         resMsg,
                              HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/actualByUser")
+    public ResponseEntity<?> actualByUser(@RequestBody User user) {
+        try {
+            List<Ticket> actual=  ticketsDao.actual(user.getId());
+            return new ResponseEntity<>(
+                      actual,
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestBody Ticket ticket) {
+        String resMsg;
+        long ticketId = ticket.getId();
+        try {
+            if(ticketsDao.existsById(ticketId)) {
+                Ticket lTicket = ticketsDao.findById(ticketId);
+                lTicket.setTicketStatusId(ticket.getTicketStatusId());
+                ticketsDao.save(lTicket);
+                resMsg = "{Ticket with id: " + ticketId + " updated}";
+            }else {
+                resMsg = "{Ticket with id: " + ticketId + " not exists}";
+            }
+            return new ResponseEntity<>(
+                    resMsg,
+                    HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
                     e.getMessage(),
